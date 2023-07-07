@@ -81,6 +81,8 @@ public class Extractor extends Thread {
 
                     HashTable.insertHash(word);
 
+                    HashTable.heighestOcurrency = cont > HashTable.heighestOcurrency ? cont : HashTable.heighestOcurrency;
+
                 } catch (FileNotFoundException ex) {
                     System.err.println("Arquivo não existe no dir.");
                 } catch (IOException ex) {
