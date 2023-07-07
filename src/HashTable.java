@@ -6,7 +6,7 @@ import java.util.List;
 public class HashTable {
     private static int HASHMOD = 5;
     private static LinkedList<Word>[] hashTable = new LinkedList[HASHMOD];
-    private static List<Word> hashList = new ArrayList<Word>();
+    private static List<Ocorrencia> ocorruncyList = new ArrayList<Ocorrencia>();
     public static int heighestOcurrency = 0;
 
     public HashTable() {
@@ -26,23 +26,25 @@ public class HashTable {
                 continue;
             }
             for (Word wordKey : wordList) {
-                hashList.add(wordKey);
+                for (Ocorrencia ocorrencia : wordKey.ocorrencias) {
+                    ocorruncyList.add(ocorrencia);
+                }
             }
         }
 
-        Collections.sort(hashList, new HashComparator());
+        Collections.sort(ocorruncyList, new HashComparator());
     }
 
-    public static void printHash() {
+    public static void printHash(String word) {
 
         sortHash();
 
-        for (Word word : hashList) {
+        System.out.println("\n\nPalavra pesquisada: " + word);
+        
+        for (Ocorrencia oc : ocorruncyList) {
             System.out.print(
-                            "\n\n"
-                            + "Palavra pesquisada: " + word.word
-                            + "\nNome do arquivo: " + word.ocorrencias.get(0).filePath
-                            + "\n" + "Ocorrencias: " + word.ocorrencias.get(0).numOcorrencias
+                            "\nNome do arquivo: " + oc.filePath
+                            + "\n" + "Ocorrencias: " + oc.numOcorrencias
                             + "\n"
                         );
         }

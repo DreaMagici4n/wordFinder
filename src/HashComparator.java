@@ -1,11 +1,8 @@
 import java.util.Comparator;
 
-class HashComparator implements Comparator<Word> {
+class HashComparator implements Comparator<Ocorrencia> {
     @Override
-    public int compare(Word word1, Word word2) {
-        int numOcorrenciasWord1 = word1.ocorrencias.get(0).numOcorrencias;
-        int numOcorrenciasWord2 = word2.ocorrencias.get(0).numOcorrencias;
-        
-        return Integer.compare(numOcorrenciasWord2, numOcorrenciasWord1);
+    public int compare(Ocorrencia word1, Ocorrencia word2) {        
+        return Integer.compare(word2.numOcorrencias, word1.numOcorrencias);
     }
 }

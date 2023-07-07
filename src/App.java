@@ -14,7 +14,7 @@ public class App {
 
         extractor.extract();
 
-        HashTable.printHash();
+        HashTable.printHash(word);
     }
 
     public static File selecionaDiretorioRaiz() {
