@@ -9,11 +9,9 @@ import javax.swing.JOptionPane;
 
 public class Extractor extends Thread {
     static ArrayDeque<File> explorar = new ArrayDeque<>();
-    private String wordToSearch;
     private File pastaInicial;
 
-    public Extractor(String word, File arquivo) {
-        this.wordToSearch = word;
+    public Extractor(File arquivo) {
         this.pastaInicial = arquivo;
     }
 
@@ -29,19 +27,19 @@ public class Extractor extends Thread {
                 File diretorioAtual = explorar.pop();
 
                 if (!diretorioAtual.isDirectory()) {
-                    searchWord(diretorioAtual, this.wordToSearch);
+                    searchWord(diretorioAtual);
                 } else {
                     File arquivosDir[] = diretorioAtual.listFiles();
 
                     for (File arq : arquivosDir) {
-                        searchWord(arq, this.wordToSearch);
+                        searchWord(arq);
                     }
                 }
             }
         }
     }
 
-    private void searchWord(File arq, String wordToSearch) {
+    private void searchWord(File arq) {
         if (arq.isDirectory()) {
             explorar.push(arq);
         } else {
@@ -53,35 +51,30 @@ public class Extractor extends Thread {
 
                     String linha = null;
 
-                    int cont = 0;
-
                     do {
                         linha = bufLeitura.readLine();
                         if (linha != null) {
                             String[] linhasArray = linha.split(" ");
 
                             for (String word : linhasArray) {
-                                if (word.matches("(.*)" + wordToSearch + "(.*)"))
-                                    cont++;
+                                if (word.length() > 2) {
+                                    Ocorrencia ocorrencia = new Ocorrencia();
+                                    Word wordObject = new Word();
+
+                                    ocorrencia.filePath = arq.getAbsolutePath();
+                                    ocorrencia.numOcorrencias = 1;
+
+                                    wordObject.ocorrencias.add(ocorrencia);
+                                    wordObject.word = word;
+
+                                    HashTable.insertHash(wordObject);
+                                }
                             }
                         }
 
                     } while (linha != null);
 
                     bufLeitura.close();
-                    
-                    Ocorrencia ocorrencia = new Ocorrencia();
-                    Word word = new Word();
-
-                    ocorrencia.filePath = arq.getAbsolutePath();
-                    ocorrencia.numOcorrencias = cont;
-
-                    word.ocorrencias.add(ocorrencia);
-                    word.word = wordToSearch;
-
-                    HashTable.insertHash(word);
-
-                    HashTable.heighestOcurrency = cont > HashTable.heighestOcurrency ? cont : HashTable.heighestOcurrency;
 
                 } catch (FileNotFoundException ex) {
                     System.err.println("Arquivo não existe no dir.");

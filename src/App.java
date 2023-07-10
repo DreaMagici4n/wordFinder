@@ -10,7 +10,7 @@ public class App {
         File arquivo = selecionaDiretorioRaiz();
         String word = JOptionPane.showInputDialog("Insira a palavra a ser pesquisada");
 
-        Extractor extractor = new Extractor(word, arquivo);
+        Extractor extractor = new Extractor(arquivo);
 
         extractor.extract();
 
