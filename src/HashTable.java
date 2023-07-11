@@ -8,29 +8,43 @@ public class HashTable {
     private static LinkedList<Word>[] hashTable = new LinkedList[HASHMOD];
     private static List<Ocorrencia> ocorruncyList = new ArrayList<Ocorrencia>();
 
-    public HashTable() {
+    public HashTable() 
+    {
+
     }
 
-    public static void insertHash(Word object) {
-        int hashValue = hashFunction(object.word);
+    public static void insertHash(Word object)
+    {
+        String wordToSearch = object.getWord();
 
-        if(hashTable[hashValue] == null) {
+        int hashValue = hashFunction(wordToSearch);
+
+        if(hashTable[hashValue] == null)
+        {
             hashTable[hashValue] = new LinkedList<Word>();
             hashTable[hashValue].add(object);
         }
-        else{ //incremeneta as ocorrencias caso seja a mesma palavra
-            Word wordObject = searchHash(object.word);
+        else
+        { //incremeneta as ocorrencias caso seja a mesma palavra
+            Word wordObject = searchHash(wordToSearch);
 
-            if ( wordObject != null) { // Verificar se esta no mesmo arquivo
+            if ( wordObject != null)
+            { // Verificar se esta no mesmo arquivo
+                Ocorrencia objectFirstOc = object.getOcorrencias().get(0);
+                String objectFilePath = objectFirstOc.getFilePath();
 
-                for (Ocorrencia oc : wordObject.ocorrencias) {
-                    if(oc.filePath.equals(object.ocorrencias.get(0).filePath)) { //se estiver no mesmo arquivo
-                        oc.numOcorrencias ++;
+                for (Ocorrencia oc : wordObject.getOcorrencias())
+                {
+                    String ocFilePath = oc.getFilePath();
+
+                    if(ocFilePath.equals(objectFilePath))
+                    { //se estiver no mesmo arquivo
+                        oc.incremmentOcorrencia();
                         return;
                     }
                 }
-                
-                wordObject.ocorrencias.add(object.ocorrencias.get(0));
+
+                wordObject.addOcorrencia(objectFirstOc);
                 return;
             }
 
@@ -39,51 +53,73 @@ public class HashTable {
         }
     }
 
-    private static Word searchHash(String word){
+    private static Word searchHash(String word)
+    {
         int hashValue = hashFunction(word);
        
-        if(hashTable[hashValue] == null){
+        if(hashTable[hashValue] == null)
+        {
           System.out.println("o elemento não se encontra");
           return null;
         }
        
-        for(Word wordObject : hashTable[hashValue]){
-            if( wordObject.word.equals(word)){
+        for(Word wordObject : hashTable[hashValue])
+        {
+            String objectWord = wordObject.getWord();
+
+            if(objectWord.equals(word))
+            {
               return wordObject;
             }
         }
         return null;
-      }
+    }
 
-    private static void sortHash(Word wordObject) {
-        for (Ocorrencia oc : wordObject.ocorrencias) {
+    private static void sortHash(Word wordObject)
+    {
+        for (Ocorrencia oc : wordObject.getOcorrencias())
+        {
             ocorruncyList.add(oc);
         }
 
         Collections.sort(ocorruncyList, new HashComparator());
-    } // OBJETO DA CLASSE WORD. MUDAR
+    }
 
-    public static void printHash(String word) {
-        if (word != null) {
-            sortHash(searchHash(word));
+    public static void printHash(String word)
+    {
+        if (word != null)
+        {
+            Word objectWord = searchHash(word);
 
-            System.out.println("\n\nPalavra pesquisada: " + word);
-            
-            for (Ocorrencia oc : ocorruncyList) {
-                System.out.print(
-                                "\nNome do arquivo: " + oc.filePath
-                                + "\n" + "Ocorrencias: " + oc.numOcorrencias
-                                + "\n"
-                            );
+            if (objectWord != null)
+            {
+                sortHash(objectWord);
+
+                System.out.println("\n\nPalavra pesquisada: " + word);
+                
+                for (Ocorrencia oc : ocorruncyList)
+                {
+                    System.out.print(
+                                    "\nNome do arquivo: " + oc.getFilePath()
+                                    + "\n" + "Ocorrencias: " + oc.getNumOcorrencia()
+                                    + "\n"
+                                );
+                }
+                return;
             }
+
+            System.out.println("\nNao ha nenhuma ocorrencia com essa palavra");
+            
         }
     }
 
-    public static int hashFunction(String word) {
-        int BASE = 256; // BASE = 128 (ASCII) ou 256 (ASCII Estendido)
+    public static int hashFunction(String word)
+    {
+        int BASE = 256;
         int id = 0;
 
-        for(int i=0; i<word.length(); i++) {
+        for(int i=0; i<word.length(); i++)
+        {
             id = (id * BASE + (int)word.charAt(i)) % HASHMOD;
         }
         return id;

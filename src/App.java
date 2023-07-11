@@ -8,26 +8,34 @@ public class App {
     public static void main(String args[]) {
 
         File arquivo = selecionaDiretorioRaiz();
-        String word = JOptionPane.showInputDialog("Insira a palavra a ser pesquisada");
 
-        Extractor extractor = new Extractor(arquivo);
+        if (arquivo != null)
+        {
+            String word = JOptionPane.showInputDialog("Insira a palavra a ser pesquisada");
 
-        extractor.extract();
+            Extractor extractor = new Extractor(arquivo);
 
-        HashTable.printHash(word);
+            extractor.extract();
+
+            HashTable.printHash(word);
+        }
     }
 
-    public static File selecionaDiretorioRaiz() {
+    public static File selecionaDiretorioRaiz() 
+    {
         JFileChooser janelaSelecao = new JFileChooser(".");
 
-        janelaSelecao.setFileFilter(new FileFilter() {
+        janelaSelecao.setFileFilter(new FileFilter()
+        {
             @Override
-            public boolean accept(File arquivo) {
+            public boolean accept(File arquivo)
+            {
                 return arquivo.isDirectory();
             }
 
             @Override
-            public String getDescription() {
+            public String getDescription()
+            {
                 return "Diretório";
             }
         });
@@ -36,9 +44,12 @@ public class App {
 
         int acao = janelaSelecao.showOpenDialog(null);
 
-        if (acao == JFileChooser.APPROVE_OPTION) {
+        if (acao == JFileChooser.APPROVE_OPTION)
+        {
             return janelaSelecao.getSelectedFile();
-        } else {
+        }
+        else
+        {
             return null;
         }
     }
